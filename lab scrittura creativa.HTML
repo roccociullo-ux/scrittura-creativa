@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Dado delle Storie - Classe Quinta</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f39c12;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+            border: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card[data-type="quando"] { border-color: #4a90e2; }
+        .card[data-type="dove"] { border-color: #f39c12; }
+        .card[data-type="chi"] { border-color: #9b59b6; }
+        .card[data-type="imprevisto"] { border-color: #e74c3c; }
+
+        .icon-box {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: #2c3e50;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .roll-btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: #34495e;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .roll-btn:hover {
+            background: #2c3e50;
+        }
+
+        .main-controls {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .big-roll-btn {
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+            transition: all 0.2s;
+        }
+
+        .big-roll-btn:hover {
+            background: #27ae60;
+            transform: scale(1.05);
+        }
+
+        .reset-btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .big-roll-btn:active, .reset-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Animation for rolling */
+        .rolling {
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>✨ Il Dado delle Storie Fantastiche ✨</h1>
+    <p class="subtitle">Classe Quinta - Laboratorio di Scrittura Creativa</p>
+
+    <div class="grid-container">
+        <!-- QUANDO -->
+        <div class="card" data-type="quando" id="card-quando">
+            <div class="category-title">Quando</div>
+            <div class="icon-box" id="icon-quando">⏳</div>
+            <div class="result-text" id="text-quando">Clicca per scoprire il tempo...</div>
+            <button class="roll-btn" onclick="rollSingle('quando')">Lancia Dado</button>
+        </div>
+
+        <!-- DOVE -->
+        <div class="card" data-type="dove" id="card-dove">
+            <div class="category-title">Dove</div>
+            <div class="icon-box" id="icon-dove">🏰</div>
+            <div class="result-text" id="text-dove">Clicca per scoprire il luogo...</div>
+            <button class="roll-btn" onclick="rollSingle('dove')">Lancia Dado</button>
+        </div>
+
+        <!-- CHI -->
+        <div class="card" data-type="chi" id="card-chi">
+            <div class="category-title">Protagonista</div>
+            <div class="icon-box" id="icon-chi">👤</div>
+            <div class="result-text" id="text-chi">Clicca per scoprire chi è...</div>
+            <button class="roll-btn" onclick="rollSingle('chi')">Lancia Dado</button>
+        </div>
+
+        <!-- IMPREVISTO -->
+        <div class="card" data-type="imprevisto" id="card-imprevisto">
+            <div class="category-title">Imprevisto</div>
+            <div class="icon-box" id="icon-imprevisto">⚡</div>
+            <div class="result-text" id="text-imprevisto">Clicca per scoprire l'evento...</div>
+            <button class="roll-btn" onclick="rollSingle('imprevisto')">Lancia Dado</button>
+        </div>
+    </div>
+
+    <div class="main-controls">
+        <button class="big-roll-btn" onclick="rollAll()">🎲 LANCIA TUTTI I DADI!</button>
+        <button class="reset-btn" onclick="resetAll()">🔄 Reset</button>
+    </div>
+
+    <script>
+        const data = {
+            quando: [
+                { text: "In un futuro distopico e tecnologico", icon: "🚀" },
+                { text: "All'alba di un'era magica", icon: "🌅" },
+                { text: "Durante un'eclissi solare totale", icon: "🌑" },
+                { text: "In un'epoca senza tempo", icon: "♾️" },
+                { text: "Nel cuore di una notte senza stelle", icon: "🌌" },
+                { text: "Durante il solstizio d'inverno", icon: "❄️" },
+                { text: "Mille anni dopo la caduta dell'antico impero", icon: "🏛️" },
+                { text: "In un lunedì mattina in cui il tempo si è fermato", icon: "🛑" },
+                { text: "Nell'istante esatto di un grande fulmine", icon: "⚡" },
+                { text: "In un'estate infinita dove il sole non tramonta mai", icon: "☀️" }
+            ],
+            dove: [
+                { text: "In un antico maniero abbandonato", icon: "🏚️" },
+                { text: "Tra le rovine di una civiltà sommersa", icon: "🧜‍♂️" },
+                { text: "In una metropoli sospesa tra le nuvole", icon: "☁️" },
+                { text: "Ai confini di una foresta incantata", icon: "🌲" },
+                { text: "In un laboratorio segreto sotterraneo", icon: "🧪" },
+                { text: "Su un pianeta gemello della Terra", icon: "🪐" },
+                { text: "All'interno di un gigantesco orologio meccanico", icon: "⚙️" },
+                { text: "In una biblioteca dove i libri prendono vita", icon: "📚" },
+                { text: "Sull'isola che non compare nelle mappe", icon: "🏝️" },
+                { text: "In un mercato magico tra due mondi", icon: "🔮" }
+            ],
+            chi: [
+                { text: "Un esploratore di mondi dimenticati", icon: "🤠" },
+                { text: "Un'apprendista custode di segreti", icon: "📜" },
+                { text: "Una creatura mitologica in incognito", icon: "🦄" },
+                { text: "Un inventore di macchine impossibili", icon: "⚙️" },
+                { text: "Una guerriera posta a difesa di un regno", icon: "🛡️" },
+                { text: "Un viaggiatore del tempo smarrito", icon: "⌚" },
+                { text: "Un robot dotato di sentimenti umani", icon: "🤖" },
+                { text: "Una scienziata che parla con le stelle", icon: "🔭" },
+                { text: "Un giovane bardo dalla voce incantata", icon: "🪕" },
+                { text: "Un pirata gentiluomo del mare di sabbia", icon: "🏴‍☠️" }
+            ],
+            imprevisto: [
+                { text: "Un portale dimensionale si apre all'improvviso", icon: "🌀" },
+                { text: "Un oggetto magico smette di funzionare", icon: "🚫" },
+                { text: "Un'ombra misteriosa ruba i ricordi", icon: "👤" },
+                { text: "Una profezia millenaria si avvera", icon: "🔮" },
+                { text: "Un messaggio cifrato appare dal nulla", icon: "✉️" },
+                { text: "La gravità inizia a comportarsi in modo strano", icon: "🆙" },
+                { text: "Tutti gli animali iniziano a parlare", icon: "🦊" },
+                { text: "Un colore mai visto prima appare nel cielo", icon: "🌈" },
+                { text: "Una chiave d'oro compare in tasca al protagonista", icon: "🔑" },
+                { text: "Il mondo intero si trasforma in un disegno a matita", icon: "✏️" }
+            ]
+        };
+
+        const defaultIcons = {
+            quando: "⏳",
+            dove: "🏰",
+            chi: "👤",
+            imprevisto: "⚡"
+        };
+
+        const defaultTexts = {
+            quando: "Clicca per scoprire il tempo...",
+            dove: "Clicca per scoprire il luogo...",
+            chi: "Clicca per scoprire chi è...",
+            imprevisto: "Clicca per scoprire l'evento..."
+        };
+
+        function rollSingle(type) {
+            const card = document.getElementById(`card-${type}`);
+            const iconBox = document.getElementById(`icon-${type}`);
+            const textBox = document.getElementById(`text-${type}`);
+            
+            card.classList.add('rolling');
+            
+            // Simula il tempo di "rotolamento" del dado
+            setTimeout(() => {
+                const options = data[type];
+                const choice = options[Math.floor(Math.random() * options.length)];
+                
+                iconBox.textContent = choice.icon;
+                textBox.textContent = choice.text;
+                card.classList.remove('rolling');
+            }, 600);
+        }
+
+        function rollAll() {
+            rollSingle('quando');
+            setTimeout(() => rollSingle('dove'), 200);
+            setTimeout(() => rollSingle('chi'), 400);
+            setTimeout(() => rollSingle('imprevisto'), 600);
+        }
+
+        function resetAll() {
+            ['quando', 'dove', 'chi', 'imprevisto'].forEach(type => {
+                const iconBox = document.getElementById(`icon-${type}`);
+                const textBox = document.getElementById(`text-${type}`);
+                
+                iconBox.textContent = defaultIcons[type];
+                textBox.textContent = defaultTexts[type];
+            });
+        }
+    </script>
+</body>
+</html>
